@@ -36,6 +36,8 @@ export default {
         router.replace("/coaches");
       }
     });
+    // when we auto logout we redirect to coaches
+    // automatically
 
     return {
       didAutoLogout,

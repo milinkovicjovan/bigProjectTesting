@@ -1,6 +1,9 @@
-import CoachForm from "./CoachForm.vue";
-import { render, screen } from "@testing-library/vue";
+import CoachForm from "../components/coaches/CoachForm.vue";
+import "@testing-library/jest-dom/extend-expect";
+import { render, screen, cleanup } from "@testing-library/vue";
 import "@testing-library/jest-dom";
+
+afterEach(cleanup);
 
 describe("Checking forms", () => {
   it("has Areas of Expertise heading", () => {

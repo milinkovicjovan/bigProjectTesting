@@ -55,7 +55,7 @@ export default {
       return selectedCoach.value.description;
     });
     let contactLink = computed(function () {
-      return route.path + "/" + props.id + "/contact";
+      return route.path + "/contact";
     });
 
     ////////////////////////////////////

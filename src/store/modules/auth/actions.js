@@ -2,14 +2,14 @@ let timer;
 
 export default {
   async login(context, payload) {
-    console.log("login action");
+    // console.log("login action");
     return context.dispatch("auth", {
       ...payload,
       mode: "login",
     });
   },
   async signup(context, payload) {
-    console.log("signup action");
+    // console.log("signup action");
     return context.dispatch("auth", {
       ...payload,
       mode: "signup",
@@ -88,6 +88,7 @@ export default {
         userId: userId,
       });
     }
+    // if we have token and userId we setUser
   },
   logout(context) {
     localStorage.removeItem("token");
