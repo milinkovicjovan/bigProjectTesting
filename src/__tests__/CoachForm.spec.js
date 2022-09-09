@@ -13,17 +13,12 @@ describe("Checking forms", () => {
       global: {
         plugins: [Router],
         components: {
-<<<<<<< HEAD
           "base-button": BaseButton,
         },
       },
-=======
-          "base-button": BaseButton
-        }
-      }
->>>>>>> 61aa7e1af1d931d447d8fc24bff329a85a033460
     });
   };
+  // working
 
   it("has Areas of Expertise heading", () => {
     setup();
