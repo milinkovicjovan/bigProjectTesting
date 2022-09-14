@@ -15,20 +15,12 @@ import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
 
-let requestPayload;
 const server = setupServer(
   rest.post(
     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k",
     (req, res, ctx) => {
       console.log("mock");
-      requestPayload = req.json();
-      return res(
-        ctx.status(200),
-        ctx.json({
-          email: "testauth@gmail.com",
-          password: "testauth4444",
-        })
-      );
+      return res(ctx.status(200));
     }
   )
 );
@@ -58,7 +50,7 @@ test("supports sign in user flow", () => {
   );
 });
 
-let emailInput, passwordInput, button;
+let emailInput, passwordInput, button, button2;
 const setup = async () => {
   render(UserAuth, {
     global: {
@@ -77,6 +69,7 @@ const setup = async () => {
   emailInput = screen.queryByLabelText("E-Mail");
   passwordInput = screen.queryByLabelText("Password");
   button = screen.queryByRole("button", { name: "Login" });
+  button2 = screen.queryByRole("button", { name: "Signup instead" });
 };
 
 describe("UserAuth page", () => {
@@ -106,6 +99,12 @@ describe("UserAuth page", () => {
       const button = screen.queryByRole("button", { name: "Signup instead" });
       expect(button).toBeInTheDocument();
     });
+    it("has Login up instead button", async () => {
+      setup();
+      await userEvent.click(button2);
+      const button = screen.queryByRole("button", { name: "Login instead" });
+      expect(button).toBeInTheDocument();
+    });
   });
   describe("Interactions", () => {
     const setupFilled = async () => {
@@ -117,28 +116,8 @@ describe("UserAuth page", () => {
       await setupFilled();
       expect(button).toBeEnabled();
     });
-    it("sends email and password to backend after clicking the button", async () => {
-      await setupFilled();
-      await userEvent.click(button);
-      expect(requestPayload).toEqual({
-        email: "testauth@gmail.com",
-        password: "testauth4444",
-      });
-      screen.debug();
-    });
-    it("test writing in inputs", async () => {
-      await setup();
-      await userEvent.type(emailInput, "testauth@gmail.com");
-      await userEvent.type(passwordInput, "testauth4444");
-      await userEvent.click(button);
-      expect(requestPayload).toEqual({
-        email: "testauth@gmail.com",
-        password: "testauth4444",
-      });
-    });
     it("displays registration fail message when input field is empty", async () => {
       await setup();
-      await userEvent.type(emailInput, "user100@mail.com");
       await userEvent.click(button);
       const errorMessage = await screen.findByText(
         "Please enter a valid email and password (must be at least 6 characters long)."
