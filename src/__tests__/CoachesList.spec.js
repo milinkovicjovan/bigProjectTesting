@@ -1,3 +1,4 @@
+import "whatwg-fetch";
 import CoachesList from "../pages/coaches/CoachesList.vue";
 import CoachItem from "../components/coaches/CoachItem.vue";
 import CoachFilter from "../components/coaches/CoachFilter.vue";

@@ -1,3 +1,4 @@
+import "whatwg-fetch";
 import CoachForm from "../components/coaches/CoachForm.vue";
 import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "@testing-library/vue";
@@ -10,7 +11,7 @@ import { setupServer } from "msw/node";
 
 const server = setupServer(
   rest.put(
-    "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches/7yfLWMPadTXNo3xPSCb4lNZo4Y13.json?auth=eyJhbGciOiJSUzI1NiIsImtpZCI6ImVkNmJjOWRhMWFmMjM2ZjhlYTU2YTVkNjIyMzQwMWZmNGUwODdmMTEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcHJvamVjdC1mb3ItY29tcG9zaXRpb24tYXBpIiwiYXVkIjoicHJvamVjdC1mb3ItY29tcG9zaXRpb24tYXBpIiwiYXV0aF90aW1lIjoxNjYyOTc3MDE1LCJ1c2VyX2lkIjoiN3lmTFdNUGFkVFhObzN4UFNDYjRsTlpvNFkxMyIsInN1YiI6Ijd5ZkxXTVBhZFRYTm8zeFBTQ2I0bE5abzRZMTMiLCJpYXQiOjE2NjI5NzcwMTUsImV4cCI6MTY2Mjk4MDYxNSwiZW1haWwiOiJ0ZXN0YXV0aEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsidGVzdGF1dGhAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.OQm5o_EnITTneKTfYQY82VGcY2F0W7ygWbTlZPD8U857ps4Jg2Xu6P-Mqo3DfDTO2u8AaaaFgLhBiSoTpaTHw_LlpsYarUxbHWmL1td7-AWYv_uiQxP1_krY2gIxY0aXoBzpD_av8pjNR6V_tHEWoDgN9maBq616KbpUszt8mBnLatmjK9Uu0uTHTfo55GtgfMnHptmEQGtfy9D6_yiW8mJDWIyfdkTzkZIWNQzBVLQRkSPiQSspfBR_G1Xvz_6qU_Iw6dFAYyrFhvhqu4F54rnF-X4J6Jk-PFM_JUR_Zj49YvbLoBu9Cq2KnEinGX49ypDrdyShx4Cy1QrYVk_2-w",
+    "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches/7yfLWMPadTXNo3xPSCb4lNZo4Y13.json",
     (req, res, ctx) => {
       console.log("mock");
       return res(

@@ -17,7 +17,7 @@ import { setupServer } from "msw/node";
 
 const server = setupServer(
   rest.post(
-    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k",
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
     (req, res, ctx) => {
       console.log("mock");
       return res(ctx.status(200));
@@ -42,7 +42,7 @@ afterAll(() => {
 test("supports sign in user flow", () => {
   server.use(
     rest.post(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k",
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
       (req, res, ctx) => {
         return res(ctx.json({ success: true }));
       }
