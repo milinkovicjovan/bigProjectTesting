@@ -8,18 +8,38 @@ import BaseButton from "../components/ui/BaseButton.vue";
 import BaseDialog from "../components/ui/BaseDialog.vue";
 import BaseSpinner from "../components/ui/BaseSpinner.vue";
 import BaseCard from "../components/ui/BaseCard.vue";
+import BaseBadge from "../components/ui/BaseBadge.vue";
 import Router from "../router";
 // import userEvent from "@testing-library/user-event";
-import store from "../store/modules/coaches";
-import { rest } from "msw";
+import store from "../store/modules/coaches/index.js";
 import { setupServer } from "msw/node";
+import { rest } from "msw";
+import { createStore } from "vuex";
+
+const storeInstance = createStore({
+  modules: {
+    coaches: store,
+  },
+});
 
 const server = setupServer(
-  rest.get(
+  rest.all(
     "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
     (req, res, ctx) => {
-      console.log("mock");
-      return res(ctx.status(200));
+      console.log("THIS IS MOCK");
+      console.log("THIS IS MOCK");
+      console.log("THIS IS MOCK");
+      console.log("THIS IS MOCK");
+      return res(
+        ctx.status(200),
+        ctx.json({
+          firstName: "Jovan",
+          lastName: "Milinkovic",
+          description: "Frontend",
+          hourlyRate: 40,
+          areas: ["frontend"],
+        })
+      );
     }
   )
 );
@@ -38,36 +58,26 @@ afterAll(() => {
   server.close();
 });
 
-test("supports sign in user flow", () => {
-  server.use(
-    rest.get(
-      "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
-      (req, res, ctx) => {
-        return res(ctx.json({ success: true }));
-      }
-    )
-  );
-});
-
 const setup = async () => {
+  // console.log(store, "This is store");
   render(CoachesList, {
     global: {
-      plugins: [Router],
+      plugins: [Router, storeInstance],
       components: {
         "base-button": BaseButton,
         "base-dialog": BaseDialog,
         "base-spinner": BaseSpinner,
         "base-card": BaseCard,
+        "base-badge": BaseBadge,
         "coach-item": CoachItem,
         "coach-filter": CoachFilter,
       },
-      template: `
-      <coach-item>Jovan Milinkovic</coach-item>`,
-      provide: {
-        store,
-      },
+      // provide: {
+      //   store,
+      // },
     },
   });
+  await Router.isReady();
 };
 
 describe("Coaches List page", () => {
@@ -77,6 +87,11 @@ describe("Coaches List page", () => {
       const button = screen.queryByRole("button", { name: "Refresh" });
       expect(button).toBeInTheDocument();
     });
+    // it("has button", () => {
+    //   setup();
+    //   const button = screen.queryByRole("button", { name: "View Details" });
+    //   expect(button).toBeInTheDocument();
+    // });
     it("has heading for choosing filters", () => {
       setup();
       const heading = screen.queryByRole("heading", {
@@ -84,11 +99,9 @@ describe("Coaches List page", () => {
       });
       expect(heading).toBeInTheDocument();
     });
-    it("has heading for choosing filters", () => {
+    it("has error heading", async () => {
       setup();
-      const heading = screen.queryByRole("heading", {
-        name: "Jovan Milinkovic",
-      });
+      const heading = await screen.findByText("No coaches found.");
       expect(heading).toBeInTheDocument();
     });
   });

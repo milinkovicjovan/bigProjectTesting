@@ -36,10 +36,13 @@ export default {
       return;
     }
 
+    // console.log("LoadCoaches action");
+
     const response = await fetch(
-      `https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json`
+      "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json"
     );
     const responseData = await response.json();
+    console.log(responseData);
 
     if (!response.ok) {
       const error = new Error(responseData.message || "Failed to fetch!");

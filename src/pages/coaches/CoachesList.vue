@@ -99,6 +99,8 @@ export default {
     // Created Lifecycle Hook CODE
     loadCoaches();
 
+    // console.log(loadCoaches(), "this is loadCoaches");
+
     function setFilters(updatedFilters) {
       activeFilters.value = updatedFilters;
     }
@@ -109,6 +111,7 @@ export default {
         await store.dispatch("coaches/loadCoaches", {
           forceRefresh: refresh,
         });
+        // console.log("this is string");
       } catch (error) {
         error.value = error.message || "Something went wrong!";
       }
