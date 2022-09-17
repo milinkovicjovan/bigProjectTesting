@@ -1,3 +1,4 @@
+import "whatwg-fetch";
 import CoachesList from "../pages/coaches/CoachesList.vue";
 import CoachItem from "../components/coaches/CoachItem.vue";
 import CoachFilter from "../components/coaches/CoachFilter.vue";
@@ -23,23 +24,11 @@ const storeInstance = createStore({
 });
 
 const server = setupServer(
-  rest.all(
+  rest.get(
     "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
     (req, res, ctx) => {
-      console.log("THIS IS MOCK");
-      console.log("THIS IS MOCK");
-      console.log("THIS IS MOCK");
-      console.log("THIS IS MOCK");
-      return res(
-        ctx.status(200),
-        ctx.json({
-          firstName: "Jovan",
-          lastName: "Milinkovic",
-          description: "Frontend",
-          hourlyRate: 40,
-          areas: ["frontend"],
-        })
-      );
+      // console.log("THIS IS MOCK");
+      return res(ctx.status(200));
     }
   )
 );
@@ -59,7 +48,8 @@ afterAll(() => {
 });
 
 const setup = async () => {
-  // console.log(store, "This is store");
+  // console.log(storeInstance.getters["coaches/loadCoaches"]);
+  // console.log(store);
   render(CoachesList, {
     global: {
       plugins: [Router, storeInstance],
@@ -72,9 +62,6 @@ const setup = async () => {
         "coach-item": CoachItem,
         "coach-filter": CoachFilter,
       },
-      // provide: {
-      //   store,
-      // },
     },
   });
   await Router.isReady();
@@ -87,9 +74,25 @@ describe("Coaches List page", () => {
       const button = screen.queryByRole("button", { name: "Refresh" });
       expect(button).toBeInTheDocument();
     });
-    // it("has button", () => {
-    //   setup();
-    //   const button = screen.queryByRole("button", { name: "View Details" });
+    it("has button", () => {
+      setup();
+      const button = screen.queryByRole("link", {
+        name: "Login to Register as Coach",
+      });
+      expect(button).toBeInTheDocument();
+    });
+    // it("has button", async () => {
+    //   await setup();
+    //   const button = screen.queryByRole("link", {
+    //     name: "Contact",
+    //   });
+    //   expect(button).toBeInTheDocument();
+    // });
+    // it("has button", async () => {
+    //   await setup();
+    //   const button = screen.queryByRole("link", {
+    //     name: "View Details",
+    //   });
     //   expect(button).toBeInTheDocument();
     // });
     it("has heading for choosing filters", () => {
@@ -99,10 +102,15 @@ describe("Coaches List page", () => {
       });
       expect(heading).toBeInTheDocument();
     });
-    it("has error heading", async () => {
-      setup();
-      const heading = await screen.findByText("No coaches found.");
-      expect(heading).toBeInTheDocument();
+    it("displays spinner during the api call is in progress", async () => {
+      await setup();
+      const spinner = screen.queryByRole("status");
+      expect(spinner).toBeVisible();
     });
+    // it("has text Jovan Milinkovic", async () => {
+    //   await setup();
+    //   const heading = await screen.getByText(/Jovan Milinkovic/i);
+    //   expect(heading).toBeInTheDocument();
+    // });
   });
 });

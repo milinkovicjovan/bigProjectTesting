@@ -1,5 +1,5 @@
 <template>
-  <div class="spinner">
+  <div class="spinner" role="status">
     <div class="lds-roller">
       <div></div>
       <div></div>

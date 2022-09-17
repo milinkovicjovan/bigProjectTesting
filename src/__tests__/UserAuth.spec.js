@@ -14,11 +14,15 @@ import store from "../store/modules/auth";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
+import "whatwg-fetch";
 
 const server = setupServer(
   rest.post(
-    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k",
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
     (req, res, ctx) => {
+      console.log("mock");
+      console.log("mock");
+      console.log("mock");
       console.log("mock");
       return res(ctx.status(200));
     }
@@ -42,7 +46,7 @@ afterAll(() => {
 test("supports sign in user flow", () => {
   server.use(
     rest.post(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k",
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
       (req, res, ctx) => {
         return res(ctx.json({ success: true }));
       }

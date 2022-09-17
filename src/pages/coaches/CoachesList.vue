@@ -77,6 +77,7 @@ export default {
 
     const filteredCoaches = computed(function () {
       const coaches = store.getters["coaches/coaches"];
+      // console.log(coaches, "coaches");
       return coaches.filter((coach) => {
         if (activeFilters.value.frontend && coach.areas.includes("frontend")) {
           return true;

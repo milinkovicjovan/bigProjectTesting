@@ -32,6 +32,7 @@ export default {
     });
   },
   async loadCoaches(context, payload) {
+    // console.log("this is ");
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
       return;
     }
@@ -50,7 +51,7 @@ export default {
     }
 
     const coaches = [];
-
+    console.log(coaches);
     for (const key in responseData) {
       const coach = {
         id: key,
@@ -62,6 +63,8 @@ export default {
       };
       coaches.push(coach);
     }
+
+    console.log(coaches, "this is coaches");
 
     context.commit("setCoaches", coaches);
     context.commit("setFetchTimestamp");
