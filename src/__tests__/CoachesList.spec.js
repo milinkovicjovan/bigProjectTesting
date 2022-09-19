@@ -11,9 +11,16 @@ import BaseCard from "../components/ui/BaseCard.vue";
 import BaseBadge from "../components/ui/BaseBadge.vue";
 import Router from "../router";
 // import userEvent from "@testing-library/user-event";
+import store from "../store/modules/coaches/index.js";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import { renderVuexTestComponent } from "../../tests/setup-tests";
+import { createStore } from "vuex";
+
+const storeInstance = createStore({
+  modules: {
+    coaches: store,
+  },
+});
 
 const server = setupServer(
   rest.get(
@@ -71,7 +78,7 @@ const setup = async () => {
   // console.log(store);
   render(CoachesList, {
     global: {
-      plugins: [Router],
+      plugins: [Router, storeInstance],
       components: {
         "base-button": BaseButton,
         "base-dialog": BaseDialog,
@@ -85,23 +92,6 @@ const setup = async () => {
   });
   await Router.isReady();
 };
-// const setup2 = async () => {
-//   // console.log(storeInstance.getters["coaches/loadCoaches"]);
-//   // console.log(store);
-//   render(CoachItem, {
-//     global: {
-//       plugins: [Router, storeInstance],
-//       components: {
-//         "base-button": BaseButton,
-//         "base-dialog": BaseDialog,
-//         "base-spinner": BaseSpinner,
-//         "base-card": BaseCard,
-//         "base-badge": BaseBadge,
-//       },
-//     },
-//   });
-//   await Router.isReady();
-// };
 
 describe("Coaches List page", () => {
   describe("Layout", () => {
@@ -117,20 +107,20 @@ describe("Coaches List page", () => {
       });
       expect(button).toBeInTheDocument();
     });
-    // it("has button Contact", async () => {
-    //   await setup();
-    //   const button = screen.queryByRole("link", {
-    //     name: "Contact",
-    //   });
-    //   expect(button).toBeInTheDocument();
-    // });
-    // it("has button View Details", async () => {
-    //   await setup();
-    //   const button = screen.queryByRole("link", {
-    //     name: "View Details",
-    //   });
-    //   expect(button).toBeInTheDocument();
-    // });
+    it("has button Contact", async () => {
+      await setup();
+      const button = screen.queryByRole("link", {
+        name: "Contact",
+      });
+      expect(button).toBeInTheDocument();
+    });
+    it("has button View Details", async () => {
+      await setup();
+      const button = screen.queryByRole("link", {
+        name: "View Details",
+      });
+      expect(button).toBeInTheDocument();
+    });
     it("has heading Find Your Coach", () => {
       setup();
       const heading = screen.queryByRole("heading", {
@@ -138,22 +128,15 @@ describe("Coaches List page", () => {
       });
       expect(heading).toBeInTheDocument();
     });
-    // it("displays spinner during loading coaches", async () => {
-    //   await setup();
-    //   const spinner = screen.queryByRole("status");
-    //   expect(spinner).toBeVisible();
-    // });
+    it("displays spinner during loading coaches", async () => {
+      await setup();
+      const spinner = screen.queryByRole("status");
+      expect(spinner).toBeVisible();
+    });
     it("has text Jovan Milinkovic", async () => {
-      const { getByText } = renderVuexTestComponent();
-      const heading = await getByText(/Jovan Milinkovic/i);
+      await setup();
+      const heading = await screen.getByText(/Jovan Milinkovic/i);
       expect(heading).toBeInTheDocument();
     });
-    // test("can render with vuex with defaults", async () => {
-    //   const { getByTestId, getByText } = renderVuexTestComponent();
-
-    //   await fireEvent.click(getByText("+"));
-
-    //   expect(getByTestId("count-value")).toHaveTextContent("1");
-    // });
   });
 });
