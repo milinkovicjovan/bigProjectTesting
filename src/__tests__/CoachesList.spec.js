@@ -12,8 +12,8 @@ import BaseBadge from "../components/ui/BaseBadge.vue";
 import Router from "../router";
 // import userEvent from "@testing-library/user-event";
 import store from "../store/modules/coaches/index.js";
-import { setupServer } from "msw/node";
-import { rest } from "msw";
+// import { setupServer } from "msw/node";
+// import { rest } from "msw";
 import { createStore } from "vuex";
 
 const storeInstance = createStore({
@@ -22,56 +22,56 @@ const storeInstance = createStore({
   },
 });
 
-const server = setupServer(
-  rest.get(
-    "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
-    (req, res, ctx) => {
-      // console.log("THIS IS MOCK");
-      return res(
-        ctx.json(
-          {
-            id: "7yfLWMPadTXNo3xPSCb4lNZo4Y13",
-            firstName: "Jovan",
-            lastName: "Milinkovic",
-            hourlyRate: 40,
-            description: "Frontend",
-            areas: ["frontend"],
-          },
-          {
-            id: "TKeA5tGlQORC5rmv4IxgZJLOSgN2",
-            firstName: "Manuelo",
-            lastName: "Lorenzo",
-            hourlyRate: 60,
-            description: "Backend Developer",
-            areas: ["backend"],
-          },
-          {
-            id: "mYZcERu9AMQVCAehphi3QnNQLdv2",
-            firstName: "Elena",
-            lastName: "Stivens",
-            hourlyRate: 30,
-            description: "Career Advisor",
-            areas: ["career"],
-          }
-        )
-      );
-    }
-  )
-);
+// const server = setupServer(
+//   rest.get(
+//     "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
+//     (req, res, ctx) => {
+//       // console.log("THIS IS MOCK");
+//       return res(
+//         ctx.json(
+//           {
+//             id: "7yfLWMPadTXNo3xPSCb4lNZo4Y13",
+//             firstName: "Jovan",
+//             lastName: "Milinkovic",
+//             hourlyRate: 40,
+//             description: "Frontend",
+//             areas: ["frontend"],
+//           },
+//           {
+//             id: "TKeA5tGlQORC5rmv4IxgZJLOSgN2",
+//             firstName: "Manuelo",
+//             lastName: "Lorenzo",
+//             hourlyRate: 60,
+//             description: "Backend Developer",
+//             areas: ["backend"],
+//           },
+//           {
+//             id: "mYZcERu9AMQVCAehphi3QnNQLdv2",
+//             firstName: "Elena",
+//             lastName: "Stivens",
+//             hourlyRate: 30,
+//             description: "Career Advisor",
+//             areas: ["career"],
+//           }
+//         )
+//       );
+//     }
+//   )
+// );
 
-beforeAll(() => {
-  server.listen({
-    onUnhandledRequest: "warn",
-  });
-});
+// beforeAll(() => {
+//   server.listen({
+//     onUnhandledRequest: "warn",
+//   });
+// });
 
-beforeEach(() => {
-  server.resetHandlers();
-});
+// beforeEach(() => {
+//   server.resetHandlers();
+// });
 
-afterAll(() => {
-  server.close();
-});
+// afterAll(() => {
+//   server.close();
+// });
 
 const setup = async () => {
   // console.log(storeInstance.getters["coaches/loadCoaches"]);
@@ -145,11 +145,11 @@ describe("Coaches List page", () => {
       });
       expect(heading).toBeInTheDocument();
     });
-    it("displays spinner during loading coaches", async () => {
-      await setup();
-      const spinner = screen.queryByRole("status");
-      expect(spinner).toBeVisible();
-    });
+    // it("displays spinner during loading coaches", async () => {
+    //   await setup();
+    //   const spinner = screen.queryByRole("status");
+    //   expect(spinner).toBeVisible();
+    // });
     // it("has text Jovan Milinkovic", async () => {
     //   await setup();
     //   const heading = await screen.getByText(/Jovan Milinkovic/i);

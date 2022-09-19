@@ -47,7 +47,7 @@ export default {
     const response = await fetch(
       "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json"
     );
-    console.log("this is Response", response);
+    // console.log("this is Response", response);
     const responseData = await response.json();
     console.log("this is responseData", responseData);
 
