@@ -11,74 +11,67 @@ import BaseCard from "../components/ui/BaseCard.vue";
 import BaseBadge from "../components/ui/BaseBadge.vue";
 import Router from "../router";
 // import userEvent from "@testing-library/user-event";
-import store from "../store/modules/coaches/index.js";
-// import { setupServer } from "msw/node";
-// import { rest } from "msw";
-import { createStore } from "vuex";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
+import { renderVuexTestComponent } from "../../tests/setup-tests";
 
-const storeInstance = createStore({
-  modules: {
-    coaches: store,
-  },
+const server = setupServer(
+  rest.get(
+    "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
+    (req, res, ctx) => {
+      // console.log("THIS IS MOCK");
+      return res(
+        ctx.json(
+          {
+            id: "7yfLWMPadTXNo3xPSCb4lNZo4Y13",
+            firstName: "Jovan",
+            lastName: "Milinkovic",
+            hourlyRate: 40,
+            description: "Frontend",
+            areas: ["frontend"],
+          },
+          {
+            id: "TKeA5tGlQORC5rmv4IxgZJLOSgN2",
+            firstName: "Manuelo",
+            lastName: "Lorenzo",
+            hourlyRate: 60,
+            description: "Backend Developer",
+            areas: ["backend"],
+          },
+          {
+            id: "mYZcERu9AMQVCAehphi3QnNQLdv2",
+            firstName: "Elena",
+            lastName: "Stivens",
+            hourlyRate: 30,
+            description: "Career Advisor",
+            areas: ["career"],
+          }
+        )
+      );
+    }
+  )
+);
+
+beforeAll(() => {
+  server.listen({
+    onUnhandledRequest: "warn",
+  });
 });
 
-// const server = setupServer(
-//   rest.get(
-//     "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json",
-//     (req, res, ctx) => {
-//       // console.log("THIS IS MOCK");
-//       return res(
-//         ctx.json(
-//           {
-//             id: "7yfLWMPadTXNo3xPSCb4lNZo4Y13",
-//             firstName: "Jovan",
-//             lastName: "Milinkovic",
-//             hourlyRate: 40,
-//             description: "Frontend",
-//             areas: ["frontend"],
-//           },
-//           {
-//             id: "TKeA5tGlQORC5rmv4IxgZJLOSgN2",
-//             firstName: "Manuelo",
-//             lastName: "Lorenzo",
-//             hourlyRate: 60,
-//             description: "Backend Developer",
-//             areas: ["backend"],
-//           },
-//           {
-//             id: "mYZcERu9AMQVCAehphi3QnNQLdv2",
-//             firstName: "Elena",
-//             lastName: "Stivens",
-//             hourlyRate: 30,
-//             description: "Career Advisor",
-//             areas: ["career"],
-//           }
-//         )
-//       );
-//     }
-//   )
-// );
+beforeEach(() => {
+  server.resetHandlers();
+});
 
-// beforeAll(() => {
-//   server.listen({
-//     onUnhandledRequest: "warn",
-//   });
-// });
-
-// beforeEach(() => {
-//   server.resetHandlers();
-// });
-
-// afterAll(() => {
-//   server.close();
-// });
+afterAll(() => {
+  server.close();
+});
 
 const setup = async () => {
   // console.log(storeInstance.getters["coaches/loadCoaches"]);
   // console.log(store);
   render(CoachesList, {
     global: {
-      plugins: [Router, storeInstance],
+      plugins: [Router],
       components: {
         "base-button": BaseButton,
         "base-dialog": BaseDialog,
@@ -150,10 +143,17 @@ describe("Coaches List page", () => {
     //   const spinner = screen.queryByRole("status");
     //   expect(spinner).toBeVisible();
     // });
-    // it("has text Jovan Milinkovic", async () => {
-    //   await setup();
-    //   const heading = await screen.getByText(/Jovan Milinkovic/i);
-    //   expect(heading).toBeInTheDocument();
+    it("has text Jovan Milinkovic", async () => {
+      const { getByText } = renderVuexTestComponent();
+      const heading = await getByText(/Jovan Milinkovic/i);
+      expect(heading).toBeInTheDocument();
+    });
+    // test("can render with vuex with defaults", async () => {
+    //   const { getByTestId, getByText } = renderVuexTestComponent();
+
+    //   await fireEvent.click(getByText("+"));
+
+    //   expect(getByTestId("count-value")).toHaveTextContent("1");
     // });
   });
 });

@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 export default {
   async registerCoach(context, data) {
     const userId = context.rootGetters.userId;
@@ -42,7 +43,9 @@ export default {
       return;
     }
 
-    console.log("LoadCoaches action");
+    // console.log("LoadCoaches action");
+    console.log("this IS FETCH");
+    console.log(fetch);
 
     const response = await fetch(
       "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json"
@@ -58,7 +61,7 @@ export default {
     }
 
     const coaches = [];
-    console.log(coaches);
+    // console.log(coaches);
     for (const key in responseData) {
       const coach = {
         id: key,
@@ -71,7 +74,7 @@ export default {
       coaches.push(coach);
     }
 
-    console.log(coaches, "this is coaches");
+    // console.log(coaches, "this is coaches");
 
     context.commit("setCoaches", coaches);
     context.commit("setFetchTimestamp");
