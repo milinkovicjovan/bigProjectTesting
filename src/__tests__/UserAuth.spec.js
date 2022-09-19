@@ -14,7 +14,6 @@ import store from "../store/modules/auth";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import "whatwg-fetch";
 
 const server = setupServer(
   rest.post(

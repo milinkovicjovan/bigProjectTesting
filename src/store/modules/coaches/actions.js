@@ -32,19 +32,26 @@ export default {
     });
   },
   async loadCoaches(context, payload) {
-    // console.log("this is ");
+    // console.log("forceRefresh", payload.forceRefresh);
+    // console.log("shouldUpdate", context.getters.shouldUpdate);
+    // console.log(
+    //   "Logical if",
+    //   !payload.forceRefresh && !context.getters.shouldUpdate
+    // );
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
       return;
     }
 
-    // console.log("LoadCoaches action");
+    console.log("LoadCoaches action");
 
     const response = await fetch(
       "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json"
     );
+    console.log("this is Response", response);
     const responseData = await response.json();
-    console.log(responseData);
+    console.log("this is responseData", responseData);
 
+    // console.log(response);
     if (!response.ok) {
       const error = new Error(responseData.message || "Failed to fetch!");
       throw error;

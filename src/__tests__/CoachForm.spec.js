@@ -7,7 +7,6 @@ import Router from "../router";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import "whatwg-fetch";
 
 const server = setupServer(
   rest.put(
