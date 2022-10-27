@@ -1,15 +1,14 @@
+import axios from "axios";
 let timer;
 
 export default {
   async login(context, payload) {
-    // console.log("login action");
     return context.dispatch("auth", {
       ...payload,
       mode: "login",
     });
   },
   async signup(context, payload) {
-    // console.log("signup action");
     return context.dispatch("auth", {
       ...payload,
       mode: "signup",
@@ -24,22 +23,21 @@ export default {
       url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDEONB1RoTxq2oA77VNLUYFBC768JxGw6k";
     }
-    const response = await fetch(url, {
+    const response = await axios({
       method: "POST",
-      body: JSON.stringify({
+      url: url,
+      data: {
         email: payload.email,
         password: payload.password,
         returnSecureToken: true,
-      }),
+      },
     });
 
-    const responseData = await response.json();
+    const responseData = await response.data;
 
-    // console.log(responseData);
-
-    if (!response.ok) {
+    if (response.status != 200) {
       const error = new Error(
-        responseData.message || "Failed to authenticate. Check your login data."
+        responseData.error || "Failed to authenticate. Check your login data."
       );
       throw error;
     }

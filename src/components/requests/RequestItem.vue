@@ -19,11 +19,6 @@ export default {
       emailLink,
     };
   },
-  // computed: {
-  //   emailLink() {
-  //     return 'mailto:' + this.email;
-  //   },
-  // },
 };
 </script>
 

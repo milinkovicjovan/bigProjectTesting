@@ -1,4 +1,5 @@
-import fetch from "node-fetch";
+import axios from "axios";
+
 export default {
   async registerCoach(context, data) {
     const userId = context.rootGetters.userId;
@@ -12,18 +13,15 @@ export default {
 
     const token = context.rootGetters.token;
 
-    const response = await fetch(
-      `https://project-for-composition-api-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=` +
+    const response = await axios({
+      method: "PUT",
+      url:
+        `https://project-for-composition-api-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=` +
         token,
-      {
-        method: "PUT",
-        body: JSON.stringify(coachData),
-      }
-    );
+      data: coachData,
+    });
 
-    // const responseData = await response.json();
-
-    if (!response.ok) {
+    if (!response.statusText === "ok") {
       // error ...
     }
 
@@ -33,36 +31,24 @@ export default {
     });
   },
   async loadCoaches(context, payload) {
-    // console.log("forceRefresh", payload.forceRefresh);
-    // console.log("shouldUpdate", context.getters.shouldUpdate);
-    // console.log(
-    //   "Logical if",
-    //   !payload.forceRefresh && !context.getters.shouldUpdate
-    // );
     if (!payload.forceRefresh && !context.getters.shouldUpdate) {
       return;
     }
 
-    // console.log("LoadCoaches action");
-    console.log("this IS FETCH");
-    console.log(fetch);
+    const baseUrl =
+      "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json";
 
-    const response = await fetch(
-      "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches.json"
-    );
-    // console.log("this is Response", response);
-    const responseData = await response.json();
-    console.log("this is responseData", responseData);
+    const response = await axios.get(baseUrl);
+    const responseData = await response.data;
 
-    // console.log(response);
-    if (!response.ok) {
-      const error = new Error(responseData.message || "Failed to fetch!");
+    if (!response.statusText === "ok") {
+      const error = new Error(error.message || "Failed to fetch!");
       throw error;
     }
 
     const coaches = [];
-    // console.log(coaches);
-    for (const key in responseData) {
+
+    for (let key in responseData) {
       const coach = {
         id: key,
         firstName: responseData[key].firstName,
@@ -73,8 +59,6 @@ export default {
       };
       coaches.push(coach);
     }
-
-    // console.log(coaches, "this is coaches");
 
     context.commit("setCoaches", coaches);
     context.commit("setFetchTimestamp");

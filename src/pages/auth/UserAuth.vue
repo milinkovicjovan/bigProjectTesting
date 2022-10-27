@@ -80,7 +80,6 @@ export default {
       try {
         if (mode.value === "login") {
           await store.dispatch("login", actionPayload);
-          // with dispatch 'login' we run login function in actions
         } else {
           await store.dispatch("signup", actionPayload);
         }

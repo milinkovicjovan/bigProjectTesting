@@ -33,11 +33,11 @@ export default {
     });
 
     const coachContactLink = computed(function () {
-      return route.path + "/" + props.id + "/contact"; // /coaches/c1/contact
+      return route.path + "/" + props.id + "/contact";
     });
 
     const coachDetailsLink = computed(function () {
-      return route.path + "/" + props.id; // /coaches/c1
+      return route.path + "/" + props.id;
     });
 
     return {
@@ -46,17 +46,6 @@ export default {
       coachDetailsLink,
     };
   },
-  // computed: {
-  //   fullName() {
-  //     return this.firstName + ' ' + this.lastName;
-  //   },
-  //   coachContactLink() {
-  //     return this.$route.path + '/' + this.id + '/contact'; // /coaches/c1/contact
-  //   },
-  //   coachDetailsLink() {
-  //     return this.$route.path + '/' + this.id; // /coaches/c1
-  //   },
-  // },
 };
 </script>
 

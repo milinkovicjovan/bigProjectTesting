@@ -27,9 +27,8 @@ export default {
 
     //////////////////////////////
     // Created Lifecyle Hook CODE
+    // Auto login when data is stored in localstorage
     store.dispatch("tryLogin");
-
-    // watch
 
     watch(didAutoLogout, function (curValue, oldValue) {
       if (curValue && curValue !== oldValue) {
@@ -43,21 +42,6 @@ export default {
       didAutoLogout,
     };
   },
-  // computed: {
-  //   didAutoLogout() {
-  //     return this.$store.getters.didAutoLogout;
-  //   }
-  // },
-  // created() {
-  //   this.$store.dispatch('tryLogin');
-  // },
-  // watch: {
-  //   didAutoLogout(curValue, oldValue) {
-  //     if (curValue && curValue !== oldValue) {
-  //       this.$router.replace('/coaches');
-  //     }
-  //   }
-  // }
 };
 </script>
 

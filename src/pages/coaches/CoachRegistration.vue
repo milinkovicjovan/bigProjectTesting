@@ -28,11 +28,5 @@ export default {
       saveData,
     };
   },
-  // methods: {
-  //   saveData(data) {
-  //     this.$store.dispatch('coaches/registerCoach', data);
-  //     this.$router.replace('/coaches');
-  //   },
-  // },
 };
 </script>

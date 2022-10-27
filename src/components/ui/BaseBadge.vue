@@ -17,11 +17,6 @@ export default {
       text,
     };
   },
-  // computed: {
-  //   text() {
-  //     return this.title.toUpperCase();
-  //   },
-  // },
 };
 </script>
 

@@ -1,110 +1,112 @@
-import CoachForm from "../components/coaches/CoachForm.vue";
-import "@testing-library/jest-dom/extend-expect";
 import { render, screen } from "@testing-library/vue";
+import "@testing-library/jest-dom/extend-expect";
 import "@testing-library/jest-dom";
-import BaseButton from "../components/ui/BaseButton.vue";
-import Router from "../router";
+import { createStore } from "vuex";
+import { createMemoryHistory, createRouter } from "vue-router";
 import userEvent from "@testing-library/user-event";
-import { rest } from "msw";
-import { setupServer } from "msw/node";
+import RouterView from "../components/layout/RouterView.vue";
+import BaseButton from "../components/ui/BaseButton.vue";
+import BaseCard from "../components/ui/BaseCard.vue";
+import CoachRegistration from "../pages/coaches/CoachRegistration";
+import coaches from "../store/modules/coaches/index.js";
 
-const server = setupServer(
-  rest.put(
-    "https://project-for-composition-api-default-rtdb.firebaseio.com/coaches/7yfLWMPadTXNo3xPSCb4lNZo4Y13.json",
-    (req, res, ctx) => {
-      console.log("mock");
-      console.log("mock");
-      console.log("mock");
-      console.log("mock");
-      console.log("mock");
-      return res(
-        ctx.json({
-          firstName: "Jovan",
-          lastName: "Milinkovic",
-          description: "Frontend",
-          hourlyRate: 40,
-          areas: "Frontend",
-        })
-      );
-    }
-  )
-);
-
-beforeAll(() => {
-  server.listen();
+const storeInstance = createStore({
+  modules: {
+    coaches: {
+      ...coaches,
+    },
+  },
 });
 
-afterAll(() => {
-  server.close();
+const history = createMemoryHistory();
+history.push("/register");
+
+const router = createRouter({
+  history: history,
+  routes: [
+    {
+      path: "/register",
+      component: CoachRegistration,
+      meta: { requiresAuth: true },
+    },
+  ],
 });
-let firstNameInput, lastNameInput, descriptionTextarea, button;
-describe("Coach Form Page", () => {
-  const setup = () => {
-    render(CoachForm, {
+
+describe("Coach Registration Page", () => {
+  const setup = async () => {
+    render(RouterView, {
       global: {
-        plugins: [Router],
+        plugins: [router, storeInstance],
         components: {
           "base-button": BaseButton,
+          "base-card": BaseCard,
         },
       },
     });
-
-    firstNameInput = screen.queryByLabelText("Firstname");
-    lastNameInput = screen.queryByLabelText("Lastname");
-    descriptionTextarea = screen.queryByLabelText("Description");
-    button = screen.queryByRole("button", { name: "Register" });
+    await router.isReady();
   };
-  // working
+
   describe("Checking inputs", () => {
-    it("has Areas of Expertise heading", () => {
-      setup();
+    it("has Areas of Expertise heading", async () => {
+      await setup();
       const header = screen.queryByRole("heading", {
         name: "Areas of Expertise",
       });
       expect(header).toBeInTheDocument();
     });
-    it("has Firstname Input", () => {
-      setup();
+
+    it("has Firstname Input", async () => {
+      await setup();
       const firstNameInput = screen.queryByLabelText("Firstname");
       expect(firstNameInput).toBeInTheDocument();
     });
-    it("has Lastname Input", () => {
-      setup();
+
+    it("has Lastname Input", async () => {
+      await setup();
       const lastNameInput = screen.queryByLabelText("Lastname");
       expect(lastNameInput).toBeInTheDocument();
     });
-    it("has description textarea", () => {
-      setup();
+
+    it("has description textarea", async () => {
+      await setup();
       const descriptionTextarea = screen.queryByLabelText("Description");
       expect(descriptionTextarea).toBeInTheDocument();
     });
-    it("has hourly rate input", () => {
-      setup();
+
+    it("has hourly rate input", async () => {
+      await setup();
       const hourlyRateInput = screen.queryByLabelText("Hourly Rate");
       expect(hourlyRateInput).toBeInTheDocument();
     });
-    it("has checkbox", () => {
-      setup();
+
+    it("has checkbox", async () => {
+      await setup();
       const checkboxLabel = screen.queryByLabelText("Frontend Development");
       expect(checkboxLabel).toBeInTheDocument();
     });
-    it("has checkbox", () => {
-      setup();
+
+    it("has checkbox", async () => {
+      await setup();
       const checkboxLabel = screen.queryByLabelText("Backend Development");
       expect(checkboxLabel).toBeInTheDocument();
     });
-    it("has checkbox", () => {
-      setup();
+
+    it("has checkbox", async () => {
+      await setup();
       const checkboxLabel = screen.queryByLabelText("Career Advisory");
       expect(checkboxLabel).toBeInTheDocument();
     });
-    it("has button", () => {
-      setup();
+
+    it("has button", async () => {
+      await setup();
       const button = screen.queryByRole("button", { name: "Register" });
       expect(button).toBeInTheDocument();
     });
+
     it("displays registration fail message when input field is empty", async () => {
       await setup();
+      const descriptionTextarea = screen.queryByLabelText("Description");
+      const button = screen.queryByRole("button", { name: "Register" });
       await userEvent.type(descriptionTextarea, "I am frontend developer");
       await userEvent.click(button);
       const errorMessage = await screen.findByText(
@@ -116,12 +118,17 @@ describe("Coach Form Page", () => {
       const errorMessage3 = await screen.findByText(
         "Please fix the above errors and submit again."
       );
+
       expect(errorMessage).toBeInTheDocument();
       expect(errorMessage2).toBeInTheDocument();
       expect(errorMessage3).toBeInTheDocument();
     });
+
     it("displays registration fail message when input field is empty", async () => {
       await setup();
+      const firstNameInput = screen.queryByLabelText("Firstname");
+      const lastNameInput = screen.queryByLabelText("Lastname");
+      const button = screen.queryByRole("button", { name: "Register" });
       await userEvent.type(firstNameInput, "Jovan");
       await userEvent.type(lastNameInput, "Milinkovic");
       await userEvent.click(button);
@@ -137,6 +144,7 @@ describe("Coach Form Page", () => {
       const errorMessage4 = await screen.findByText(
         "Please fix the above errors and submit again."
       );
+
       expect(errorMessage).toBeInTheDocument();
       expect(errorMessage2).toBeInTheDocument();
       expect(errorMessage3).toBeInTheDocument();

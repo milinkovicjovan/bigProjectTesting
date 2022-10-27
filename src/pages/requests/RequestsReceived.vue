@@ -19,6 +19,7 @@
             :key="req.id"
             :email="req.userEmail"
             :message="req.message"
+            :data-testid="req.id"
           ></request-item>
         </ul>
         <h3 v-else>You haven't received any requests yet!</h3>
@@ -52,12 +53,11 @@ export default {
     //////////////////////////
     // Created Lifecycle Hook CODE
     loadRequests();
-    // method will be executed when
-    // loadRequests are created
 
     async function loadRequests() {
       isLoading.value = true;
       try {
+        // console.log("FETCHING", store.dispatch("requests/fetchRequests"));
         await store.dispatch("requests/fetchRequests");
       } catch (error) {
         error.value = error.message || "Something failed!";
@@ -78,37 +78,6 @@ export default {
       handleError,
     };
   },
-  // data() {
-  //   return {
-  //     isLoading: false,
-  //     error: null,
-  //   };
-  // },
-  // computed: {
-  //   receivedRequests() {
-  //     return this.$store.getters['requests/requests'];
-  //   },
-  //   hasRequests() {
-  //     return this.$store.getters['requests/hasRequests'];
-  //   },
-  // },
-  // created() {
-  //   this.loadRequests();
-  // },
-  // methods: {
-  //   async loadRequests() {
-  //     this.isLoading = true;
-  //     try {
-  //       await this.$store.dispatch('requests/fetchRequests');
-  //     } catch (error) {
-  //       this.error = error.message || 'Something failed!';
-  //     }
-  //     this.isLoading = false;
-  //   },
-  //   handleError() {
-  //     this.error = null;
-  //   },
-  // },
 };
 </script>
 

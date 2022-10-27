@@ -1,126 +1,92 @@
-import UserAuth from "../pages/auth/UserAuth.vue";
+import { render, screen } from "@testing-library/vue";
 import "@testing-library/jest-dom";
-import {
-  render,
-  screen,
-  //   waitForElementToBeRemoved,
-} from "@testing-library/vue";
+import userEvent from "@testing-library/user-event";
+import { createStore } from "vuex";
+import { createMemoryHistory, createRouter } from "vue-router";
+import UserAuth from "../pages/auth/UserAuth.vue";
 import BaseButton from "../components/ui/BaseButton.vue";
 import BaseDialog from "../components/ui/BaseDialog.vue";
 import BaseSpinner from "../components/ui/BaseDialog.vue";
 import BaseCard from "../components/ui/BaseCard.vue";
-import Router from "../router";
-import store from "../store/modules/auth";
-import userEvent from "@testing-library/user-event";
-import { rest } from "msw";
-import { setupServer } from "msw/node";
+import RouterView from "../components/layout/RouterView.vue";
+import auth from "../store/modules/auth/index";
 
-const server = setupServer(
-  rest.post(
-    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
-    (req, res, ctx) => {
-      console.log("mock");
-      console.log("mock");
-      console.log("mock");
-      console.log("mock");
-      return res(ctx.status(200));
-    }
-  )
-);
-
-beforeAll(() => {
-  server.listen({
-    onUnhandledRequest: "warn",
-  });
+const storeInstance = createStore({
+  modules: {
+    auth: {
+      ...auth,
+    },
+  },
 });
 
-beforeEach(() => {
-  server.resetHandlers();
+const history = createMemoryHistory();
+history.push("/auth");
+
+const router = createRouter({
+  history: history,
+  routes: [{ path: "/auth", component: UserAuth }],
 });
 
-afterAll(() => {
-  server.close();
-});
-
-test("supports sign in user flow", () => {
-  server.use(
-    rest.post(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
-      (req, res, ctx) => {
-        return res(ctx.json({ success: true }));
-      }
-    )
-  );
-});
-
-let emailInput, passwordInput, button, button2;
 const setup = async () => {
-  render(UserAuth, {
+  render(RouterView, {
     global: {
-      plugins: [Router],
+      plugins: [router, storeInstance],
       components: {
         "base-button": BaseButton,
         "base-dialog": BaseDialog,
         "base-spinner": BaseSpinner,
         "base-card": BaseCard,
       },
-      provide: {
-        store,
-      },
     },
   });
-  emailInput = screen.queryByLabelText("E-Mail");
-  passwordInput = screen.queryByLabelText("Password");
-  button = screen.queryByRole("button", { name: "Login" });
-  button2 = screen.queryByRole("button", { name: "Signup instead" });
+  await router.isReady();
 };
 
-describe("UserAuth page", () => {
+describe("User Auth Page", () => {
   describe("Layout", () => {
-    it("has E-mail label", () => {
-      setup();
+    it("has E-mail label", async () => {
+      await setup();
       const input = screen.queryByLabelText("E-Mail");
       expect(input).toBeInTheDocument();
     });
-    it("has password input", () => {
-      setup();
+
+    it("has password input", async () => {
+      await setup();
       const input = screen.queryByLabelText("Password");
       expect(input).toBeInTheDocument();
     });
+
     it("has password type for password input", async () => {
       await setup();
       const input = screen.queryByLabelText("Password");
       expect(input.type).toBe("password");
     });
-    it("has Login button", () => {
-      setup();
+
+    it("has Login button", async () => {
+      await setup();
       const button = screen.queryByRole("button", { name: "Login" });
       expect(button).toBeInTheDocument();
     });
-    it("has Sign Up button", () => {
-      setup();
+
+    it("has Sign Up instead button", async () => {
+      await setup();
       const button = screen.queryByRole("button", { name: "Signup instead" });
       expect(button).toBeInTheDocument();
     });
+
     it("has Login up instead button", async () => {
-      setup();
+      await setup();
+      const button2 = screen.queryByRole("button", { name: "Signup instead" });
       await userEvent.click(button2);
-      const button = screen.queryByRole("button", { name: "Login instead" });
+      const button = await screen.queryByRole("button", {
+        name: "Login instead",
+      });
       expect(button).toBeInTheDocument();
     });
-  });
-  describe("Interactions", () => {
-    const setupFilled = async () => {
-      await setup();
-      await userEvent.type(emailInput, "testauth@gmail.com");
-      await userEvent.type(passwordInput, "testauth4444");
-    };
-    it("enables the button when email and password inputs are filled", async () => {
-      await setupFilled();
-      expect(button).toBeEnabled();
-    });
+
     it("displays registration fail message when input field is empty", async () => {
       await setup();
+      const button = screen.queryByRole("button", { name: "Login" });
       await userEvent.click(button);
       const errorMessage = await screen.findByText(
         "Please enter a valid email and password (must be at least 6 characters long)."

@@ -148,7 +148,6 @@ export default {
         rate: rate.value.val,
         areas: areas.value.val,
       };
-      console.log(formData);
 
       context.emit("save-data", formData);
     }
@@ -165,76 +164,6 @@ export default {
       submitForm,
     };
   },
-  // data() {
-  //   return {
-  //     firstName: {
-  //       val: '',
-  //       isValid: true,
-  //     },
-  //     lastName: {
-  //       val: '',
-  //       isValid: true,
-  //     },
-  //     description: {
-  //       val: '',
-  //       isValid: true,
-  //     },
-  //     rate: {
-  //       val: null,
-  //       isValid: true,
-  //     },
-  //     areas: {
-  //       val: [],
-  //       isValid: true,
-  //     },
-  //     formIsValid: true,
-  //   };
-  // },
-  // methods: {
-  //   clearValidity(input) {
-  //     this[input].isValid = true;
-  //   },
-  //   validateForm() {
-  //     this.formIsValid = true;
-  //     if (this.firstName.val === '') {
-  //       this.firstName.isValid = false;
-  //       this.formIsValid = false;
-  //     }
-  //     if (this.lastName.val === '') {
-  //       this.lastName.isValid = false;
-  //       this.formIsValid = false;
-  //     }
-  //     if (this.description.val === '') {
-  //       this.description.isValid = false;
-  //       this.formIsValid = false;
-  //     }
-  //     if (!this.rate.val || this.rate.val < 0) {
-  //       this.rate.isValid = false;
-  //       this.formIsValid = false;
-  //     }
-  //     if (this.areas.val.length === 0) {
-  //       this.areas.isValid = false;
-  //       this.formIsValid = false;
-  //     }
-  //   },
-  //   submitForm() {
-  //     this.validateForm();
-
-  //     if (!this.formIsValid) {
-  //       return;
-  //     }
-
-  //     const formData = {
-  //       first: this.firstName.val,
-  //       last: this.lastName.val,
-  //       desc: this.description.val,
-  //       rate: this.rate.val,
-  //       areas: this.areas.val,
-  //     };
-
-  //     this.$emit('save-data', formData);
-  //   },
-  // },
 };
 </script>
 

@@ -1,22 +1,20 @@
+import axios from "axios";
+
 export default {
   async contactCoach(context, payload) {
     const newRequest = {
       userEmail: payload.email,
       message: payload.message,
     };
-    const response = await fetch(
-      `https://project-for-composition-api-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`,
-      {
-        method: "POST",
-        body: JSON.stringify(newRequest),
-      }
-    );
+    const response = await axios({
+      method: "POST",
+      url: `https://project-for-composition-api-default-rtdb.firebaseio.com/requests/${payload.coachId}.json`,
+      data: newRequest,
+    });
 
-    const responseData = await response.json();
+    const responseData = await response.data;
 
-    console.log(responseData);
-
-    if (!response.ok) {
+    if (response.status != 200) {
       const error = new Error(
         responseData.message || "Failed to send request."
       );
@@ -33,16 +31,15 @@ export default {
   async fetchRequests(context) {
     const coachId = context.rootGetters.userId;
     const token = context.rootGetters.token;
-    const response = await fetch(
+    const response = await axios.get(
       `https://project-for-composition-api-default-rtdb.firebaseio.com/requests/${coachId}.json?auth=` +
         token
     );
-    const responseData = await response.json();
 
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || "Failed to fetch requests."
-      );
+    const responseData = await response.data;
+
+    if (!response.statusText === "ok") {
+      const error = new Error(error.message || "Failed to fetch requests.");
       throw error;
     }
 

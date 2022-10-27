@@ -51,14 +51,6 @@ export default {
       tryClose,
     };
   },
-  // methods: {
-  //   tryClose() {
-  //     if (this.fixed) {
-  //       return;
-  //     }
-  //     this.$emit('close');
-  //   },
-  // },
 };
 </script>
 

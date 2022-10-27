@@ -38,6 +38,7 @@
             :last-name="coach.lastName"
             :rate="coach.hourlyRate"
             :areas="coach.areas"
+            :data-testid="coach.id"
           ></coach-item>
         </ul>
         <h3 v-else>No coaches found.</h3>
@@ -77,7 +78,7 @@ export default {
 
     const filteredCoaches = computed(function () {
       const coaches = store.getters["coaches/coaches"];
-      // console.log(coaches, "coaches");
+
       return coaches.filter((coach) => {
         if (activeFilters.value.frontend && coach.areas.includes("frontend")) {
           return true;
@@ -100,8 +101,6 @@ export default {
     // Created Lifecycle Hook CODE
     loadCoaches();
 
-    // console.log(loadCoaches(), "this is loadCoaches");
-
     function setFilters(updatedFilters) {
       activeFilters.value = updatedFilters;
     }
@@ -112,7 +111,6 @@ export default {
         await store.dispatch("coaches/loadCoaches", {
           forceRefresh: refresh,
         });
-        // console.log("this is string");
       } catch (error) {
         error.value = error.message || "Something went wrong!";
       }
@@ -136,65 +134,6 @@ export default {
       handleError,
     };
   },
-  // data() {
-  //   return {
-  //     isLoading: false,
-  //     error: null,
-  //     activeFilters: {
-  //       frontend: true,
-  //       backend: true,
-  //       career: true,
-  //     },
-  //   };
-  // },
-  // computed: {
-  //   isLoggedIn() {
-  //     return this.$store.getters.isAuthenticated;
-  //   },
-  //   isCoach() {
-  //     return this.$store.getters['coaches/isCoach'];
-  //   },
-  //   filteredCoaches() {
-  //     const coaches = this.$store.getters['coaches/coaches'];
-  //     return coaches.filter((coach) => {
-  //       if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
-  //         return true;
-  //       }
-  //       if (this.activeFilters.backend && coach.areas.includes('backend')) {
-  //         return true;
-  //       }
-  //       if (this.activeFilters.career && coach.areas.includes('career')) {
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  //   },
-  //   hasCoaches() {
-  //     return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
-  //   },
-  // },
-  // created() {
-  //   this.loadCoaches();
-  // },
-  // methods: {
-  //   setFilters(updatedFilters) {
-  //     this.activeFilters = updatedFilters;
-  //   },
-  //   async loadCoaches(refresh = false) {
-  //     this.isLoading = true;
-  //     try {
-  //       await this.$store.dispatch('coaches/loadCoaches', {
-  //         forceRefresh: refresh,
-  //       });
-  //     } catch (error) {
-  //       this.error = error.message || 'Something went wrong!';
-  //     }
-  //     this.isLoading = false;
-  //   },
-  //   handleError() {
-  //     this.error = null;
-  //   },
-  // },
 };
 </script>
 
